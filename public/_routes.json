@@ -1,0 +1,5 @@
+{
+  "include": ["/*"],
+  "exclude": ["/_headers", "/_redirects", "/build/*", "/favicon.ico"],
+  "version": 1
+}
