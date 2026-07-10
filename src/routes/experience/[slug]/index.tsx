@@ -8,6 +8,7 @@ import type { DocumentHead } from "@builder.io/qwik-city";
 import { getExperienceBySlug } from "~/lib/firestore-rest";
 import { renderMarkdown, convertWhatsAppMarkdown } from "~/lib/markdown";
 import { FooterLogo } from "~/components/footer-logo/footer-logo";
+import { GalleryLightbox } from "~/components/gallery-lightbox/gallery-lightbox";
 export const useExperienceData = routeLoader$(async (requestEvent) => {
   const slug = requestEvent.params.slug;
   const exp = await getExperienceBySlug(slug);
@@ -73,16 +74,6 @@ export default component$(() => {
 
   const closeGallery = $(() => {
     galleryOpen.value = false;
-  });
-
-  const goToPreviousImage = $(() => {
-    galleryIndex.value =
-      galleryIndex.value === 0 ? images.length - 1 : galleryIndex.value - 1;
-  });
-
-  const goToNextImage = $(() => {
-    galleryIndex.value =
-      galleryIndex.value === images.length - 1 ? 0 : galleryIndex.value + 1;
   });
   const videoEmbedUrl = getSafeVideoEmbedUrl(exp.videoLink);
 
@@ -339,106 +330,12 @@ export default component$(() => {
       )}
 
       {/* Gallery Modal */}
-      {galleryOpen.value && (
-        <div
-          class="fixed inset-0 z-50 bg-[rgba(12,16,22,0.92)] backdrop-blur-sm"
-          onClick$={closeGallery}
-        >
-          <div class="flex min-h-full items-center justify-center p-4 md:p-8">
-            <div
-              class="relative w-full max-w-[1380px] rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(19,27,35,0.98)_0%,rgba(10,14,20,0.98)_100%)] p-4 shadow-[0_30px_120px_rgba(0,0,0,0.45)] md:p-6"
-              onClick$={(event) => event.stopPropagation()}
-            >
-              <div class="mb-4 flex items-center justify-between gap-4">
-                <div>
-                  <p class="m-0 font-sans text-xs font-semibold uppercase tracking-[0.26em] text-gold/70">
-                    Photo gallery
-                  </p>
-                  <p class="mt-2 mb-0 font-serif text-lg text-white md:text-2xl">
-                    {exp.title}
-                  </p>
-                </div>
-                <div class="flex items-center gap-3">
-                  <span class="rounded-full border border-white/10 bg-white/5 px-4 py-2 font-sans text-sm text-white/75">
-                    {galleryIndex.value + 1} / {images.length}
-                  </span>
-                  <button
-                    onClick$={closeGallery}
-                    class="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gold transition-colors hover:bg-white/10"
-                    aria-label="Close gallery"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width={1.5} stroke="currentColor" class="w-7 h-7">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              <div class="relative overflow-hidden rounded-[24px] bg-black/30">
-                {images.length > 1 && (
-                  <button
-                    onClick$={goToPreviousImage}
-                    class="absolute left-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/35 text-white backdrop-blur transition-colors hover:bg-black/55 md:left-5 md:h-14 md:w-14"
-                    aria-label="Previous photo"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width={1.5} stroke="currentColor" class="h-7 w-7">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                    </svg>
-                  </button>
-                )}
-
-                <div class="flex items-center justify-center px-12 py-4 md:px-20 md:py-6">
-                  <img
-                    src={images[galleryIndex.value]}
-                    alt={`Photo ${galleryIndex.value + 1}`}
-                    class="max-h-[72vh] w-auto max-w-full rounded-[18px] object-contain"
-                    width={1200}
-                    height={800}
-                  />
-                </div>
-
-                {images.length > 1 && (
-                  <button
-                    onClick$={goToNextImage}
-                    class="absolute right-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/35 text-white backdrop-blur transition-colors hover:bg-black/55 md:right-5 md:h-14 md:w-14"
-                    aria-label="Next photo"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width={1.5} stroke="currentColor" class="h-7 w-7">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                    </svg>
-                  </button>
-                )}
-              </div>
-
-              {images.length > 1 && (
-                <div class="mt-5 flex gap-3 overflow-x-auto pb-1">
-                  {images.map((img, i) => (
-                    <button
-                      key={i}
-                      onClick$={() => (galleryIndex.value = i)}
-                      class={`shrink-0 overflow-hidden rounded-2xl border transition-all ${
-                        i === galleryIndex.value
-                          ? "border-gold shadow-[0_0_0_2px_rgba(222,210,155,0.2)]"
-                          : "border-white/10 opacity-70 hover:opacity-100"
-                      }`}
-                      aria-label={`Go to photo ${i + 1}`}
-                    >
-                      <img
-                        src={img}
-                        alt={`Thumbnail ${i + 1}`}
-                        class="h-20 w-24 object-cover md:h-24 md:w-32"
-                        width={128}
-                        height={96}
-                        loading="lazy"
-                      />
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      <GalleryLightbox
+        images={images}
+        title={exp.title}
+        isOpen={galleryOpen}
+        currentIndex={galleryIndex}
+      />
 
       <FooterLogo />
     </div>
