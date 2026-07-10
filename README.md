@@ -7,7 +7,11 @@ Ultra-fast web experience catalog powered by **Qwik** + **Firebase**.
 - 💨 [Tailwind CSS v4](https://tailwindcss.com/)
 - ⚙️ [Vite](https://vitejs.dev/) + [TypeScript](https://www.typescriptlang.org/)
 
-**Live Demo**: https://github.com/dragoshouse/frontend-ec-qwik
+**Live Demo**: https://catallog-experiences.web.app
+
+**GitHub**: https://github.com/dragoshouse/frontend-ec-qwik
+
+**Auto-Deploy**: ✅ GitHub Actions configured (auto-deploy to Firebase on push to main)
 
 ---
 
