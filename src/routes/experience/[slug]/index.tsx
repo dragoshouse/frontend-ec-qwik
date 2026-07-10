@@ -72,9 +72,6 @@ export default component$(() => {
     galleryOpen.value = true;
   });
 
-  const closeGallery = $(() => {
-    galleryOpen.value = false;
-  });
   const videoEmbedUrl = getSafeVideoEmbedUrl(exp.videoLink);
 
   return (
