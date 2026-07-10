@@ -51,8 +51,8 @@ jobs:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
 
       # Build functions
-      - name: Build Firebase functions
-        run: cd functions && npm install && npm run build
+      - name: Install Firebase functions dependencies
+        run: cd functions && npm install
         continue-on-error: true
 
       # Deploy a Firebase (solo en main, no en PRs)
